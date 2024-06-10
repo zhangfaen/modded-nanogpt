@@ -292,6 +292,10 @@ if __name__ == "__main__":
     print(f"using device: {device}")
 
     tokens_per_fwdbwd = B * T * ddp_world_size
+    assert args.total_batch_size == tokens_per_fwdbwd
+
+    # import  pdb
+    # pdb.set_trace()
 
     # set up a context manager following the desired dtype and device
     ctx = torch.amp.autocast(device_type='cuda', dtype=torch.bfloat16)
@@ -316,7 +320,14 @@ if __name__ == "__main__":
     if hasattr(config, "coordinate_descent_tuning"):
         config.coordinate_descent_tuning = True # suggested by @Chillee
     print0("compiling the model...")
-    model = torch.compile(model)
+    # model = torch.compile(model)
+
+    # load tokens
+    train_loader = DistributedDataLoader(args.input_bin, B, T, ddp_rank, ddp_world_size)
+    val_loader = None
+    if args.input_val_bin:
+        val_loader = DistributedDataLoader(args.input_val_bin, B, T, ddp_rank, ddp_world_size)
+    x, y = train_loader.next_batch()
 
     # here we wrap model into DDP container
     model = DDP(model, device_ids=[ddp_local_rank])
