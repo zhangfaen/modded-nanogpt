@@ -57,10 +57,13 @@ parser.add_argument("-v", "--version", type=str, default="10B", help="Which vers
 parser.add_argument("-s", "--shard_size", type=int, default=10**8, help="Size of each shard in tokens")
 args = parser.parse_args()
 
+import pdb
+pdb.set_trace()
+
 # FineWeb has a few possible subsamples available
 assert args.version in ["10B", "100B"], "version must be one of 10B, 100B"
 if args.version == "10B":
-    local_dir = "fineweb10B"
+    local_dir = "fineweb10B_for_debugging"
     remote_name = "sample-10BT"
 elif args.version == "100B":
     local_dir = "fineweb100B"

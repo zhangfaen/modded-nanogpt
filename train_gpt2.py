@@ -298,6 +298,9 @@ if __name__ == "__main__":
     tokens_per_fwdbwd = B * T * ddp_world_size
     assert args.total_batch_size == tokens_per_fwdbwd
 
+    # import  pdb
+    # pdb.set_trace()
+
     # set up a context manager following the desired dtype and device
     ctx = torch.amp.autocast(device_type='cuda', dtype=torch.bfloat16)
 
@@ -313,7 +316,7 @@ if __name__ == "__main__":
     if hasattr(config, "coordinate_descent_tuning"):
         config.coordinate_descent_tuning = True # suggested by @Chillee
     print0("compiling the model...")
-    model = torch.compile(model)
+    # model = torch.compile(model)
 
     # load tokens
     train_loader = DistributedDataLoader(args.input_bin, B, T, ddp_rank, ddp_world_size)
