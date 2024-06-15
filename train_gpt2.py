@@ -301,6 +301,8 @@ if __name__ == "__main__":
     # import  pdb
     # pdb.set_trace()
 
+    torch.set_float32_matmul_precision('high')
+
     # set up a context manager following the desired dtype and device
     ctx = torch.amp.autocast(device_type='cuda', dtype=torch.bfloat16)
 
@@ -316,7 +318,7 @@ if __name__ == "__main__":
     if hasattr(config, "coordinate_descent_tuning"):
         config.coordinate_descent_tuning = True # suggested by @Chillee
     print0("compiling the model...")
-    # model = torch.compile(model)
+    model = torch.compile(model)
 
     # load tokens
     train_loader = DistributedDataLoader(args.input_bin, B, T, ddp_rank, ddp_world_size)
@@ -389,6 +391,10 @@ if __name__ == "__main__":
         # the validation/sampling one last time, and then we break right here as we're done.
         if last_step:
             break
+        
+        if master_process:
+            import pdb
+            pdb.set_trace()
 
         # --------------- TRAINING SECTION BEGIN -----------------
         model.train()
