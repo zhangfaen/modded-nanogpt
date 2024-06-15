@@ -2,7 +2,7 @@
 
 This is a variant of the [PyTorch GPT-2 trainer](https://github.com/karpathy/llm.c/blob/master/train_gpt2.py) from
 Andrej Karpathy's [llm.c](https://github.com/karpathy/llm.c) repo. It:
-* Trains 2x more efficiently (takes only 5B tokens instead of 10B to reach the same validation loss).
+* Trains 2x more efficiently (taking only 5B tokens instead of 10B to reach the same validation loss).
 * Has simpler code (446 lines instead of 858).
 * Implements modernizations like rotary embeddings.
 
@@ -25,6 +25,5 @@ The speedup is due to the following changes:
 - Switched to trapezoidal learning rate schedule following [2405.18392](https://arxiv.org/abs/2405.18392)
 - Switched to rotary embeddings
 - Removed the special initialization for linear layers before residuals. Instead, just scale down the output of the attention block by a fixed scalar.
-- Normalized the gradient for each parameter to have unit norm
 - Removed all affine scale and bias parameters from the architecture, and switched to RMSNorm (actually this causes a slight slowdown, and I just did it to reduce code complexity)
 
